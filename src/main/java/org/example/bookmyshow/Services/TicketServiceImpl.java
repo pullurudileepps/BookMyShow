@@ -3,7 +3,7 @@ package org.example.bookmyshow.Services;
 import org.example.bookmyshow.Exceptions.InvalidBookTicketRequestException;
 import org.example.bookmyshow.Exceptions.SeatsUnavailableException;
 import org.example.bookmyshow.Repositories.ShowRepository;
-import org.example.bookmyshow.Repositories.ShowSeatResitory;
+import org.example.bookmyshow.Repositories.ShowSeatRepository;
 import org.example.bookmyshow.Repositories.TicketRepository;
 import org.example.bookmyshow.Repositories.UserRepository;
 import org.example.bookmyshow.Model.*;
@@ -20,14 +20,14 @@ public class TicketServiceImpl implements TicketService {
 
     private UserRepository userRepository;
     private ShowRepository showRepository;
-    private ShowSeatResitory showSeatResitory;
+    private ShowSeatRepository showSeatRepository;
     private TicketRepository ticketRepository;
 
     @Autowired
-    public TicketServiceImpl(UserRepository userRepository, ShowRepository showRepository, ShowSeatResitory showSeatResitory, TicketRepository ticketRepository) {
+    public TicketServiceImpl(UserRepository userRepository, ShowRepository showRepository, ShowSeatRepository showSeatRepository, TicketRepository ticketRepository) {
         this.userRepository = userRepository;
         this.showRepository = showRepository;
-        this.showSeatResitory = showSeatResitory;
+        this.showSeatRepository = showSeatRepository;
         this.ticketRepository = ticketRepository;
     }
 
@@ -41,11 +41,11 @@ public class TicketServiceImpl implements TicketService {
         else
             throw new InvalidBookTicketRequestException("User id is invalid");
         Show show = this.showRepository.findById(showId).orElseThrow(() -> new InvalidBookTicketRequestException("Show id is invalid"));
-        ShowSeat showSeat = this.showSeatResitory.findById(showSeatIds.get(0)).orElseThrow(() -> new InvalidBookTicketRequestException("Seat id is invalid"));
+        ShowSeat showSeat = this.showSeatRepository.findById(showSeatIds.getFirst()).orElseThrow(() -> new InvalidBookTicketRequestException("Seat id is invalid"));
         if (showSeat.getShow().getId() != showId) {
             throw new InvalidBookTicketRequestException("Given seats does not belong to the same show");
         }
-        List<ShowSeat> showSeats = this.showSeatResitory.findShowSeatsByIdInAndSeatStatus_AvailableAndShow(showSeatIds, show);
+        List<ShowSeat> showSeats = this.showSeatRepository.findShowSeatsByIdInAndSeatStatusAndShow(showSeatIds, SeatStatus.AVAILABLE, show);
         if (showSeats.size() != showSeatIds.size()) {
             throw new SeatsUnavailableException("some of the seats you are trying to book are unavailable");
         }
@@ -53,7 +53,7 @@ public class TicketServiceImpl implements TicketService {
             SS.setSeatStatus(SeatStatus.BLOCKED);
             SS.setBookedBy(user);
         }
-        this.showSeatResitory.saveAll(showSeats);
+        this.showSeatRepository.saveAll(showSeats);
         Ticket ticket = new Ticket();
         ticket.setMovie(show.getMovie());
         ticket.setShow(show);
