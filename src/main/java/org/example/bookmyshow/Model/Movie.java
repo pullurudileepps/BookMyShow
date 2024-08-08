@@ -2,7 +2,6 @@ package org.example.bookmyshow.Model;
 
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.Data;
 
 @Data

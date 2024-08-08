@@ -1,10 +1,6 @@
 package org.example.bookmyshow.Model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import lombok.Data;
-
-import jakarta.persistence.Entity;
 import lombok.Data;
 
 @Data
