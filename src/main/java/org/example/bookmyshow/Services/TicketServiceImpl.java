@@ -18,10 +18,10 @@ import java.util.Optional;
 @Service
 public class TicketServiceImpl implements TicketService {
 
-    private UserRepository userRepository;
-    private ShowRepository showRepository;
-    private ShowSeatRepository showSeatRepository;
-    private TicketRepository ticketRepository;
+    private final UserRepository userRepository;
+    private final ShowRepository showRepository;
+    private final ShowSeatRepository showSeatRepository;
+    private final TicketRepository ticketRepository;
 
     @Autowired
     public TicketServiceImpl(UserRepository userRepository, ShowRepository showRepository, ShowSeatRepository showSeatRepository, TicketRepository ticketRepository) {

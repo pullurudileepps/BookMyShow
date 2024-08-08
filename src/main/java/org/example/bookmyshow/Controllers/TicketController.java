@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class TicketController {
 
-    private TicketService ticketService;
+    private final TicketService ticketService;
 
     @Autowired
     public TicketController(TicketService ticketService) {
