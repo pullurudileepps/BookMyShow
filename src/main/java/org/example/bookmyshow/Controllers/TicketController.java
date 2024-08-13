@@ -1,9 +1,11 @@
 package org.example.bookmyshow.Controllers;
 
+import jakarta.validation.Valid;
 import org.example.bookmyshow.Dtos.BookTicketRequestDto;
 import org.example.bookmyshow.Dtos.BookTicketResponseDto;
 import org.example.bookmyshow.Dtos.Response;
 import org.example.bookmyshow.Exceptions.InvalidBookTicketRequestException;
+import org.example.bookmyshow.Exceptions.SeatsUnavailableException;
 import org.example.bookmyshow.Model.Ticket;
 import org.example.bookmyshow.Services.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("ticket-controller/")
+@RequestMapping("ticket-controller")
 public class TicketController {
 
     private final TicketService ticketService;
@@ -22,7 +24,7 @@ public class TicketController {
     }
 
     @PostMapping("/bookTicket")
-    public BookTicketResponseDto bookTicket(@RequestBody BookTicketRequestDto requestDto) {
+    public BookTicketResponseDto bookTicket(@RequestBody @Valid BookTicketRequestDto requestDto) throws InvalidBookTicketRequestException, SeatsUnavailableException {
         BookTicketResponseDto responseDto = new BookTicketResponseDto();
         try {
             validationBookTicketRequest(requestDto);
@@ -30,11 +32,12 @@ public class TicketController {
             Response response = Response.getSuccessResponse();
             responseDto.setTicket(ticket);
             responseDto.setResponse(response);
-        } catch (Exception e) {
-            Response response = Response.getFailedResponse(e.getMessage());
-            responseDto.setResponse(response);
+            return responseDto;
+        } catch (InvalidBookTicketRequestException e) {
+            throw new InvalidBookTicketRequestException(e.getMessage());
+        }catch (Exception ex){
+            throw new SeatsUnavailableException(ex.getMessage());
         }
-        return responseDto;
     }
 
     private static void validationBookTicketRequest(BookTicketRequestDto requestDto) throws InvalidBookTicketRequestException {
