@@ -73,6 +73,12 @@
 			<version>3.26.0</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- Swagger or Open API3 Implementation to document all the Rest API 's -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.0.4</version>
+		</dependency>
 	</dependencies>
 
 	<build>

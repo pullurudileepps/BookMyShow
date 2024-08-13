@@ -8,9 +8,11 @@ import org.example.bookmyshow.Model.Ticket;
 import org.example.bookmyshow.Services.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class TicketController {
 
     private final TicketService ticketService;
@@ -20,7 +22,7 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    @RequestMapping(path = "/bookTicket")
+    @GetMapping("/bookTicket")
     public BookTicketResponseDto bookTicket(BookTicketRequestDto requestDto) {
         BookTicketResponseDto responseDto = new BookTicketResponseDto();
         try {
